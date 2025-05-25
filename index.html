@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autovaluta il tuo Padel - Check-up Gratuito</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #00ff88, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 1.2em;
+            color: #00d4ff;
+            margin-bottom: 30px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .section-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #00ff88;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .question:hover {
+            transform: translateY(-2px);
+        }
+        
+        .question-text {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        
+        .radio-group {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .radio-option {
+            position: relative;
+            flex: 1;
+            min-width: 60px;
+        }
+        
+        .radio-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .radio-label {
+            display: block;
+            text-align: center;
+            padding: 10px 5px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+        
+        .radio-label:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .radio-option input[type="radio"]:checked + .radio-label {
+            background: linear-gradient(45deg, #00ff88, #00d4ff);
+            color: #1a1a2e;
+            font-weight: bold;
+        }
+        
+        .score-value {
+            font-weight: bold;
+            display: block;
+            margin-top: 5px;
+        }
+        
+        #results {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .score-display {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 212, 255, 0.1));
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .total-score {
+            font-size: 3em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00ff88, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .score-breakdown {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        
+        .score-item {
+            text-align: center;
+        }
+        
+        .score-label {
+            font-size: 0.9em;
+            color: #aaa;
+        }
+        
+        .score-number {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #00ff88;
+        }
+        
+        .interpretation {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .interpretation h3 {
+            color: #00ff88;
+            margin-bottom: 10px;
+        }
+        
+        .tips {
+            padding: 20px;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .tips h3 {
+            color: #00ff88;
+            margin-bottom: 15px;
+        }
+        
+        .tip-item {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .tip-item:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #00ff88;
+        }
+        
+        .cta {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 212, 255, 0.2));
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .cta h3 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            color: #00ff88;
+        }
+        
+        .cta p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        
+        .whatsapp-btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #25D366, #128C7E);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+        }
+        
+        .whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #00ff88, #00d4ff);
+            color: #1a1a2e;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 255, 136, 0.6);
+        }
+        
+        .restart-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #00ff88;
+            border: 2px solid #00ff88;
+        }
+        
+        .restart-btn:hover {
+            background: rgba(0, 255, 136, 0.1);
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+            }
+            
+            .radio-option {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AUTOVALUTA IL TUO PADEL</h1>
+        <p class="subtitle">Scopri il tuo livello in 3 minuti</p>
+        
+        <form id="evaluationForm">
+            <!-- SEZIONE TECNICA -->
+            <div class="section">
+                <h2 class="section-title">Aspetti Tecnici</h2>
+                
+                <div class="question">
+                    <p class="question-text">Efficacia dei colpi di base</p>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="tech1-1" name="tech1" value="-2">
+                            <label for="tech1-1" class="radio-label">
+                                Molto male
+                                <span class="score-value">-2</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tech1-2" name="tech1" value="-1">
+                            <label for="tech1-2" class="radio-label">
+                                Limitato
+                                <span class="score-value">-1</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tech1-3" name="tech1" value="0">
+                            <label for="tech1-3" class="radio-label">
+                                Nella media
+                                <span class="score-value">0</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tech1-4" name="tech1" value="1">
+                            <label for="tech1-4" class="radio-label">
+                                Buono
+                                <span class="score-value">+1</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tech1-5" name="tech1" value="2">
+                            <label for="tech1-5" class="radio-label">
+                                Eccellente
+                                <span class="score-value">+2</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">Precisione nei colpi decisivi</p>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="tech2-1" name="tech2" value="-2">
+                            <label for="tech2-1" class="radio-label">
+                                Molto male
+                                <span class="score-value">-2</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tech2-2" name="tech2" value="-1">
+                            <label for="tech2-2" class="radio-label">
+                                Limitato
+                                <span class="score-value">-1</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tech2-3" name="tech2" value="0">
+                            <label for="tech2-3" class="radio-label">
+                                Nella media
+                                <span class="score-value">0</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tech2-4" name="tech2" value="1">
+                            <label for="tech2-4" class="radio-label">
+                                Buono
+                                <span class="score-value">+1</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tech2-5" name="tech2" value="2">
+                            <label for="tech2-5" class="radio-label">
+                                Eccellente
+                                <span class="score-value">+2</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">Controllo del servizio</p>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="tech3-1" name="tech3" value="-2">
+                            <label for="tech3-1" class="radio-label">
+                                Molto male
+                                <span class="score-value">-2</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tech3-2" name="tech3" value="-1">
+                            <label for="tech3-2" class="radio-label">
+                                Limitato
+                                <span class="score-value">-1</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tech3-3" name="tech3" value="0">
+                            <label for="tech3-3" class="radio-label">
+                                Nella media
+                                <span class="score-value">0</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tech3-4" name="tech3" value="1">
+                            <label for="tech3-4" class="radio-label">
+                                Buono
+                                <span class="score-value">+1</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tech3-5" name="tech3" value="2">
+                            <label for="tech3-5" class="radio-label">
+                                Eccellente
+                                <span class="score-value">+2</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SEZIONE TATTICA -->
+            <div class="section">
+                <h2 class="section-title">Aspetti Tattici</h2>
+                
+                <div class="question">
+                    <p class="question-text">Lettura del gioco avversario</p>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="tact1-1" name="tact1" value="-2">
+                            <label for="tact1-1" class="radio-label">
+                                Molto male
+                                <span class="score-value">-2</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tact1-2" name="tact1" value="-1">
+                            <label for="tact1-2" class="radio-label">
+                                Limitato
+                                <span class="score-value">-1</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tact1-3" name="tact1" value="0">
+                            <label for="tact1-3" class="radio-label">
+                                Nella media
+                                <span class="score-value">0</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tact1-4" name="tact1" value="1">
+                            <label for="tact1-4" class="radio-label">
+                                Buono
+                                <span class="score-value">+1</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tact1-5" name="tact1" value="2">
+                            <label for="tact1-5" class="radio-label">
+                                Eccellente
+                                <span class="score-value">+2</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">Scelta delle soluzioni tattiche</p>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="tact2-1" name="tact2" value="-2">
+                            <label for="tact2-1" class="radio-label">
+                                Molto male
+                                <span class="score-value">-2</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tact2-2" name="tact2" value="-1">
+                            <label for="tact2-2" class="radio-label">
+                                Limitato
+                                <span class="score-value">-1</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tact2-3" name="tact2" value="0">
+                            <label for="tact2-3" class="radio-label">
+                                Nella media
+                                <span class="score-value">0</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tact2-4" name="tact2" value="1">
+                            <label for="tact2-4" class="radio-label">
+                                Buono
+                                <span class="score-value">+1</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tact2-5" name="tact2" value="2">
+                            <label for="tact2-5" class="radio-label">
+                                Eccellente
+                                <span class="score-value">+2</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">Utilizzo dello spazio di gioco</p>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="tact3-1" name="tact3" value="-2">
+                            <label for="tact3-1" class="radio-label">
+                                Molto male
+                                <span class="score-value">-2</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tact3-2" name="tact3" value="-1">
+                            <label for="tact3-2" class="radio-label">
+                                Limitato
+                                <span class="score-value">-1</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tact3-3" name="tact3" value="0">
+                            <label for="tact3-3" class="radio-label">
+                                Nella media
+                                <span class="score-value">0</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tact3-4" name="tact3" value="1">
+                            <label for="tact3-4" class="radio-label">
+                                Buono
+                                <span class="score-value">+1</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="tact3-5" name="tact3" value="2">
+                            <label for="tact3-5" class="radio-label">
+                                Eccellente
+                                <span class="score-value">+2</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SEZIONE MENTALE -->
+            <div class="section">
+                <h2 class="section-title">Aspetti Mentali</h2>
+                
+                <div class="question">
+                    <p class="question-text">Gestione dei momenti chiave</p>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="ment1-1" name="ment1" value="-2">
+                            <label for="ment1-1" class="radio-label">
+                                Molto male
+                                <span class="score-value">-2</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="ment1-2" name="ment1" value="-1">
+                            <label for="ment1-2" class="radio-label">
+                                Limitato
+                                <span class="score-value">-1</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="ment1-3" name="ment1" value="0">
+                            <label for="ment1-3" class="radio-label">
+                                Nella media
+                                <span class="score-value">0</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="ment1-4" name="ment1" value="1">
+                            <label for="ment1-4" class="radio-label">
+                                Buono
+                                <span class="score-value">+1</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="ment1-5" name="ment1" value="2">
+                            <label for="ment1-5" class="radio-label">
+                                Eccellente
+                                <span class="score-value">+2</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">Concentrazione durante il gioco</p>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="ment2-1" name="ment2" value="-2">
+                            <label for="ment2-1" class="radio-label">
+                                Molto male
+                                <span class="score-value">-2</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="ment2-2" name="ment2" value="-1">
+                            <label for="ment2-2" class="radio-label">
+                                Limitato
+                                <span class="score-value">-1</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="ment2-3" name="ment2" value="0">
+                            <label for="ment2-3" class="radio-label">
+                                Nella media
+                                <span class="score-value">0</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="ment2-4" name="ment2" value="1">
+                            <label for="ment2-4" class="radio-label">
+                                Buono
+                                <span class="score-value">+1</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="ment2-5" name="ment2" value="2">
+                            <label for="ment2-5" class="radio-label">
+                                Eccellente
+                                <span class="score-value">+2</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">Reazione agli errori</p>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="ment3-1" name="ment3" value="-2">
+                            <label for="ment3-1" class="radio-label">
+                                Molto male
+                                <span class="score-value">-2</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="ment3-2" name="ment3" value="-1">
+                            <label for="ment3-2" class="radio-label">
+                                Limitato
+                                <span class="score-value">-1</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="ment3-3" name="ment3" value="0">
+                            <label for="ment3-3" class="radio-label">
+                                Nella media
+                                <span class="score-value">0</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="ment3-4" name="ment3" value="1">
+                            <label for="ment3-4" class="radio-label">
+                                Buono
+                                <span class="score-value">+1</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="ment3-5" name="ment3" value="2">
+                            <label for="ment3-5" class="radio-label">
+                                Eccellente
+                                <span class="score-value">+2</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">Controllo dei pensieri</p>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="ment4-1" name="ment4" value="-2">
+                            <label for="ment4-1" class="radio-label">
+                                Molto male
+                                <span class="score-value">-2</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="ment4-2" name="ment4" value="-1">
+                            <label for="ment4-2" class="radio-label">
+                                Limitato
+                                <span class="score-value">-1</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="ment4-3" name="ment4" value="0">
+                            <label for="ment4-3" class="radio-label">
+                                Nella media
+                                <span class="score-value">0</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="ment4-4" name="ment4" value="1">
+                            <label for="ment4-4" class="radio-label">
+                                Buono
+                                <span class="score-value">+1</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="ment4-5" name="ment4" value="2">
+                            <label for="ment4-5" class="radio-label">
+                                Eccellente
+                                <span class="score-value">+2</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn">SCOPRI I TUOI RISULTATI</button>
+        </form>
+        
+        <div id="results">
+            <div class="score-display">
+                <h2>IL TUO PUNTEGGIO TOTALE</h2>
+                <div class="total-score" id="totalScore">0/20</div>
+                <div class="score-breakdown">
+                    <div class="score-item">
+                        <div class="score-label">Tecnica</div>
+                        <div class="score-number" id="techScore">0/6</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Tattica</div>
+                        <div class="score-number" id="tactScore">0/6</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Mentale</div>
+                        <div class="score-number" id="mentScore">0/8</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="interpretation" id="interpretation">
+                <!-- Verrà popolato dinamicamente -->
+            </div>
+            
+            <div class="tips" id="tips">
+                <!-- Verrà popolato dinamicamente -->
+            </div>
+            
+            <div class="cta">
+                <h3>Vuoi migliorare il tuo gioco?</h3>
+                <p>Hai diritto a una consulenza GRATUITA di 10 minuti con LoZio!</p>
+                <a href="https://wa.me/393791151472" class="whatsapp-btn" target="_blank">
+                    📞 PRENOTA ORA SU WHATSAPP
+                </a>
+                <p style="margin-top: 15px; font-size: 0.9em; opacity: 0.8;">
+                    Scrivi "AUTOVALUTAZIONE" per ricevere la tua consulenza gratuita
+                </p>
+            </div>
+            
+            <button type="button" class="btn restart-btn" onclick="restartEvaluation()">
+                RICOMINCIA IL TEST
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('evaluationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculateResults();
+        });
+        
+        function calculateResults() {
+            // Calcola i punteggi
+            const techQuestions = ['tech1', 'tech2', 'tech3'];
+            const tactQuestions = ['tact1', 'tact2', 'tact3'];
+            const mentQuestions = ['ment1', 'ment2', 'ment3', 'ment4'];
+            
+            let techScore = 0;
+            let tactScore = 0;
+            let mentScore = 0;
+            
+            // Verifica che tutte le domande siano state risposte
+            let allAnswered = true;
+            
+            techQuestions.forEach(q => {
+                const answer = document.querySelector(`input[name="${q}"]:checked`);
+                if (answer) {
+                    techScore += parseInt(answer.value);
+                } else {
+                    allAnswered = false;
+                }
+            });
+            
+            tactQuestions.forEach(q => {
+                const answer = document.querySelector(`input[name="${q}"]:checked`);
+                if (answer) {
+                    tactScore += parseInt(answer.value);
+                } else {
+                    allAnswered = false;
+                }
+            });
+            
+            mentQuestions.forEach(q => {
+                const answer = document.querySelector(`input[name="${q}"]:checked`);
+                if (answer) {
+                    mentScore += parseInt(answer.value);
+                } else {
+                    allAnswered = false;
+                }
+            });
+            
+            if (!allAnswered) {
+                alert('Per favore, rispondi a tutte le domande prima di continuare.');
+                return;
+            }
+            
+            const totalScore = techScore + tactScore + mentScore;
+            
+            // Mostra i risultati
+            document.getElementById('techScore').textContent = techScore + '/6';
+            document.getElementById('tactScore').textContent = tactScore + '/6';
+            document.getElementById('mentScore').textContent = mentScore + '/8';
+            document.getElementById('totalScore').textContent = totalScore + '/20';
+            
+            // Interpretazione
+            let interpretation = '';
+            let tips = '';
+            
+            if (totalScore >= 10) {
+                interpretation = `
+                    <h3>🏆 Il tuo gioco è SOLIDO!</h3>
+                    <p>Con un punteggio di ${totalScore}/20, hai già delle buone basi. Piccoli aggiustamenti mirati possono portarti al livello successivo e farti dominare in campo.</p>
+                `;
+            } else if (totalScore >= 0) {
+                interpretation = `
+                    <h3>💪 Hai POTENZIALE!</h3>
+                    <p>Il tuo punteggio di ${totalScore}/20 indica chiari margini di miglioramento. Con il giusto allenamento, puoi fare un salto di qualità notevole.</p>
+                `;
+            } else {
+                interpretation = `
+                    <h3>🎯 Tempo di TRASFORMAZIONE!</h3>
+                    <p>Il tuo punteggio di ${totalScore}/20 indica aree specifiche da correggere. La buona notizia? Hai margini di miglioramento enormi!</p>
+                `;
+            }
+            
+            // Trova l'area più debole
+            const scores = [
+                { name: 'Tecnica', score: techScore, max: 6 },
+                { name: 'Tattica', score: tactScore, max: 6 },
+                { name: 'Mentale', score: mentScore, max: 8 }
+            ];
+            
+            scores.sort((a, b) => (a.score/a.max) - (b.score/b.max));
+            const weakestArea = scores[0];
+            
+            interpretation += `<p><strong>La tua area prioritaria di intervento è: ${weakestArea.name}</strong></p>`;
+            
+            // Suggerimenti personalizzati
+            tips = '<h3>I tuoi consigli personalizzati:</h3>';
+            
+            if (weakestArea.name === 'Tecnica') {
+                tips += `
+                    <div class="tip-item">Dedica 15 minuti a sessione ai fondamentali</div>
+                    <div class="tip-item">Registra i tuoi colpi per analizzare la tecnica</div>
+                    <div class="tip-item">Lavora sulla consistenza prima della potenza</div>
+                `;
+            } else if (weakestArea.name === 'Tattica') {
+                tips += `
+                    <div class="tip-item">Studia i pattern di gioco degli avversari</div>
+                    <div class="tip-item">Pratica situazioni di gioco specifiche</div>
+                    <div class="tip-item">Migliora la comunicazione con il partner</div>
+                `;
+            } else {
+                tips += `
+                    <div class="tip-item">Pratica tecniche di respirazione pre-punto</div>
+                    <div class="tip-item">Sviluppa routine per i momenti chiave</div>
+                    <div class="tip-item">Lavora sulla visualizzazione positiva</div>
+                `;
+            }
+            
+            // Aggiungi suggerimento bonus se punteggio negativo
+            if (techScore < 0 || tactScore < 0 || mentScore < 0) {
+                tips += `
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(255, 107, 107, 0.1); border-radius: 10px;">
+                        <p style="color: #ff6b6b; font-weight: bold;">⚠️ Attenzione: Hai almeno un'area con punteggio negativo!</p>
+                        <p>Questo richiede un intervento immediato. La consulenza gratuita può aiutarti a capire come migliorare rapidamente.</p>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('interpretation').innerHTML = interpretation;
+            document.getElementById('tips').innerHTML = tips;
+            
+            // Nascondi il form e mostra i risultati
+            document.getElementById('evaluationForm').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+            
+            // Scrolla verso l'alto
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function restartEvaluation() {
+            // Reset form
+            document.getElementById('evaluationForm').reset();
+            
+            // Mostra form e nascondi risultati
+            document.getElementById('evaluationForm').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            
+            // Scrolla verso l'alto
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
