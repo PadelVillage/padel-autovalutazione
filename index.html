@@ -27,6 +27,18 @@
         }
         .hidden { display: none !important; }
         
+        /* Stile per il nuovo testo di istruzioni nella seconda schermata */
+        .quiz-instructions {
+            background: #eefaf9;
+            border-left: 5px solid var(--secondary);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--dark);
+        }
+
         .level-section {
             margin-bottom: 20px; border: 1px solid #ddd; 
             border-radius: 15px; overflow: hidden; background: #fff;
@@ -89,6 +101,17 @@
             font-size: 1rem;
         }
         h1 { font-size: 1.5rem; text-align: center; margin-top: 0; }
+        
+        .privacy-container {
+            font-size: 0.85rem; margin: 20px 0; display: flex; 
+            align-items: center; gap: 12px; cursor: pointer;
+        }
+        .privacy-container input {
+            width: 20px; height: 20px; cursor: pointer; margin: 0; flex-shrink: 0;
+        }
+        .privacy-container label {
+            cursor: pointer; line-height: 1.2; user-select: none;
+        }
     </style>
 </head>
 <body>
@@ -96,7 +119,7 @@
 <div id="app">
     <div id="step-reg">
         <h1>Padel Village ASD</h1>
-        <p style="text-align: center; font-size: 0.95rem;"><strong>Autovalutazione Tecnica Livelli FITP/TPRA</strong></p>
+        <p style="text-align: center; font-size: 0.95rem;"><strong>Test di Autovalutazione di gioco per i livelli FITP/TPRA</strong></p>
         
         <div class="disclaimer-box">
             <strong>AVVISO:</strong> L'autovalutazione è puramente indicativa. Lo staff tecnico del club si riserva il diritto di modificare il livello assegnato in base all'osservazione sul campo.
@@ -105,8 +128,8 @@
         <input type="text" id="nome" placeholder="Nome e Cognome">
         <input type="email" id="email" placeholder="Indirizzo Email">
         
-        <div style="font-size: 0.85rem; margin: 20px 0; display: flex; align-items: flex-start; gap: 10px;">
-            <input type="checkbox" id="privacy-check" onchange="document.getElementById('start-btn').disabled = !this.checked" style="width:22px; height:22px;">
+        <div class="privacy-container" onclick="togglePrivacy()">
+            <input type="checkbox" id="privacy-check" onchange="document.getElementById('start-btn').disabled = !this.checked" onclick="event.stopPropagation()">
             <label for="privacy-check">Accetto il trattamento dei dati per finalità interne a Padel Village ASD.</label>
         </div>
         
@@ -114,6 +137,11 @@
     </div>
 
     <div id="step-quiz" class="hidden">
+        <div class="quiz-instructions">
+            <strong>Istruzioni:</strong> Di seguito sono descritte le diverse categorie di livello di gioco. 
+            Ti invitiamo a <strong>leggere attentamente tutte le descrizioni</strong> prima di identificarti in una di esse. 
+            Seleziona i quadratini relativi alle caratteristiche che rappresentano meglio il tuo attuale stile di gioco.
+        </div>
         <div id="quiz-form"></div>
         <button class="btn-action" onclick="calculateResult()">Genera Livello Stimato</button>
     </div>
@@ -136,6 +164,12 @@
 </div>
 
 <script>
+    function togglePrivacy() {
+        const ck = document.getElementById('privacy-check');
+        ck.checked = !ck.checked;
+        document.getElementById('start-btn').disabled = !ck.checked;
+    }
+
     const levelsData = [
         { 
             cat: "Principiante", lvBase: "1.0", lvAdv: "1.5", 
@@ -204,6 +238,7 @@
         document.getElementById('step-reg').classList.add('hidden');
         document.getElementById('step-quiz').classList.remove('hidden');
         const container = document.getElementById('quiz-form');
+        container.innerHTML = ""; // Pulisce il form prima di generarlo
         
         levelsData.forEach((section, index) => {
             container.innerHTML += `
@@ -252,8 +287,6 @@
 
         if (maxCategoryIdx === -1) return alert("Seleziona almeno una voce!");
         const section = levelsData[maxCategoryIdx];
-        
-        // Logica: 1-3 risposte = Base. 4-5 risposte = Avanzato (.5)
         const finalLv = (countInMaxCategory >= 4) ? section.lvAdv : section.lvBase;
 
         finalResult = { lv: finalLv, cat: section.cat, desc: section.desc };
