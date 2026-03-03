@@ -3,115 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Padel Village ASD - Autovalutazione - Livello</title>
+    <title>Padel Village ASD - Autovalutazione</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root {
-            --primary: #d4fc79;
-            --secondary: #00b09b;
-            --dark: #1a252f;
-            --warning: #d63031;
-            --gray: #95a5a6;
-            --accent: #2c3e50;
-            --not-mastered-bg: #fff5f5;
+            --primary: #d4fc79; --secondary: #00b09b; --dark: #1a252f;
+            --warning: #d63031; --gray: #95a5a6; --accent: #2c3e50;
+            --error-red: #ff4757; --not-mastered-bg: #fff5f5;
         }
-        body { 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background: linear-gradient(135deg, var(--primary), var(--secondary)); 
-            margin: 0; padding: 10px; color: var(--dark);
-            min-height: 100vh; display: flex; align-items: center;
-        }
-        #app { 
-            width: 100%; max-width: 600px; background: white; 
-            padding: 1.5rem; border-radius: 25px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin: auto;
-        }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, var(--primary), var(--secondary)); margin: 0; padding: 10px; min-height: 100vh; display: flex; align-items: center; }
+        #app { width: 100%; max-width: 600px; background: white; padding: 1.5rem; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin: auto; }
         .hidden { display: none !important; }
         
-        /* Stile per il nuovo testo di istruzioni nella seconda schermata */
-        .quiz-instructions {
-            background: #eefaf9;
-            border-left: 5px solid var(--secondary);
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            color: var(--dark);
-        }
+        h1 { font-size: 1.5rem; text-align: center; margin-top: 0; }
+        .btn-action { background: var(--secondary); color: white; border: none; width: 100%; padding: 18px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1.1rem; margin-top: 10px; transition: 0.3s; }
+        .btn-secondary { background: var(--gray); margin-top: 5px; padding: 12px; font-size: 0.9rem; }
+        .btn-action:disabled { background: var(--gray); opacity: 0.6; }
+        
+        input { width: 100%; padding: 14px; margin: 8px 0 2px 0; border: 2px solid #eee; border-radius: 10px; box-sizing: border-box; font-size: 1rem; }
+        .error-msg { color: var(--error-red); font-size: 0.75rem; margin-bottom: 10px; height: 15px; font-weight: bold; display: block; }
 
-        .level-section {
-            margin-bottom: 20px; border: 1px solid #ddd; 
-            border-radius: 15px; overflow: hidden; background: #fff;
-        }
-        .level-header {
-            background: var(--accent); color: white; padding: 12px 15px;
-            font-weight: bold; text-transform: uppercase; font-size: 0.85rem;
-            display: flex; justify-content: space-between;
-        }
+        .quiz-instructions { background: #eefaf9; border-left: 5px solid var(--secondary); padding: 15px; margin-bottom: 20px; border-radius: 10px; font-size: 0.9rem; line-height: 1.5; }
+        .level-section { margin-bottom: 20px; border: 1px solid #ddd; border-radius: 15px; overflow: hidden; background: #fff; }
+        .level-header { background: var(--accent); color: white; padding: 12px 15px; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; display: flex; justify-content: space-between; }
         .level-content { padding: 15px; }
         
-        .not-mastered-box {
-            background-color: var(--not-mastered-bg);
-            border: 1px solid #feb2b2;
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 15px;
-            font-size: 0.85rem;
-        }
+        .not-mastered-box { background-color: var(--not-mastered-bg); border: 1px solid #feb2b2; border-radius: 10px; padding: 12px; margin-bottom: 15px; font-size: 0.85rem; }
         .not-mastered-box strong { color: var(--warning); display: block; margin-bottom: 5px; text-transform: uppercase; }
         .not-mastered-list { margin: 0; padding-left: 18px; color: #63171b; }
         
-        .instruction-text {
-            font-size: 0.9rem; font-weight: bold; color: var(--secondary);
-            margin-bottom: 10px; text-align: center;
-        }
-
-        .description-text { 
-            font-size: 0.85rem; color: #444; font-style: italic; 
-            margin-bottom: 12px; line-height: 1.4; border-left: 3px solid var(--secondary);
-            padding-left: 10px; background: #f9f9f9; padding: 8px;
-        }
-        
+        .description-text { font-size: 0.85rem; color: #444; font-style: italic; margin-bottom: 12px; line-height: 1.4; border-left: 3px solid var(--secondary); padding-left: 10px; background: #f9f9f9; padding: 8px; }
         .options-grid { display: grid; gap: 8px; }
-        .option-item {
-            display: flex; align-items: center; gap: 10px;
-            padding: 12px; border: 1px solid #eee; border-radius: 10px;
-            cursor: pointer; transition: 0.2s; font-size: 0.9rem;
-        }
-        .option-item:active { background: #e8f5e9; }
+        .option-item { display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid #eee; border-radius: 10px; cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
         .option-item input { width: 22px; height: 22px; flex-shrink: 0; }
         
-        .disclaimer-box {
-            font-size: 0.85rem; color: var(--warning); background: #fff5f5;
-            padding: 15px; border-radius: 10px; border: 1px dashed var(--warning);
-            margin-bottom: 15px; text-align: center; line-height: 1.4;
-        }
-
-        .btn-action { 
-            background: var(--secondary); color: white; border: none; 
-            width: 100%; padding: 18px; border-radius: 12px; 
-            font-weight: bold; cursor: pointer; font-size: 1.1rem;
-            margin-top: 10px; -webkit-appearance: none;
-        }
-        .btn-action:disabled { background: var(--gray); opacity: 0.6; }
-
-        input[type="text"], input[type="email"] { 
-            width: 100%; padding: 14px; margin: 8px 0; 
-            border: 2px solid #eee; border-radius: 10px; box-sizing: border-box;
-            font-size: 1rem;
-        }
-        h1 { font-size: 1.5rem; text-align: center; margin-top: 0; }
-        
-        .privacy-container {
-            font-size: 0.85rem; margin: 20px 0; display: flex; 
-            align-items: center; gap: 12px; cursor: pointer;
-        }
-        .privacy-container input {
-            width: 20px; height: 20px; cursor: pointer; margin: 0; flex-shrink: 0;
-        }
-        .privacy-container label {
-            cursor: pointer; line-height: 1.2; user-select: none;
-        }
+        .summary-box { background: #f9f9f9; padding: 20px; border-radius: 15px; margin: 20px 0; text-align: left; font-size: 0.95rem; border: 1px solid #eee; }
+        .review-list { font-size: 0.85rem; color: #555; padding-left: 20px; margin-top: 10px; }
+        #success-message { background: #e6fffa; border: 1px solid var(--secondary); color: #234e52; padding: 15px; border-radius: 12px; margin-top: 20px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -119,191 +47,201 @@
 <div id="app">
     <div id="step-reg">
         <h1>Padel Village ASD</h1>
-        <p style="text-align: center; font-size: 0.95rem;"><strong>Test di Autovalutazione di gioco per i livelli FITP/TPRA</strong></p>
-        
-        <div class="disclaimer-box">
-            <strong>AVVISO:</strong> L'autovalutazione è puramente indicativa. Lo staff tecnico del club si riserva il diritto di modificare il livello assegnato in base all'osservazione sul campo.
-        </div>
-        
+        <p style="text-align: center; font-size: 0.95rem;"><strong>Autovalutazione Livelli FITP/TPRA</strong></p>
         <input type="text" id="nome" placeholder="Nome e Cognome">
         <input type="email" id="email" placeholder="Indirizzo Email">
-        
-        <div class="privacy-container" onclick="togglePrivacy()">
-            <input type="checkbox" id="privacy-check" onchange="document.getElementById('start-btn').disabled = !this.checked" onclick="event.stopPropagation()">
-            <label for="privacy-check">Accetto il trattamento dei dati per finalità interne a Padel Village ASD.</label>
-        </div>
-        
-        <button id="start-btn" class="btn-action" onclick="showQuiz()" disabled>Inizia Autovalutazione</button>
+        <button id="send-code-btn" class="btn-action" onclick="sendVerificationCode()">Ricevi Codice di Accesso</button>
+    </div>
+
+    <div id="step-verify" class="hidden">
+        <h1>Verifica Identità</h1>
+        <p style="text-align: center;">Codice inviato a:<br><strong id="display-email"></strong></p>
+        <input type="text" id="input-code" placeholder="Codice a 4 cifre">
+        <span id="err-verify" class="error-msg"></span>
+        <button class="btn-action" onclick="checkCode()">Verifica e Inizia Test</button>
     </div>
 
     <div id="step-quiz" class="hidden">
-        <div class="quiz-instructions">
-            <strong>Istruzioni:</strong> Di seguito sono descritte le diverse categorie di livello di gioco. 
-            Ti invitiamo a <strong>leggere attentamente tutte le descrizioni</strong> prima di identificarti in una di esse. 
-            Seleziona i quadratini relativi alle caratteristiche che rappresentano meglio il tuo attuale stile di gioco.
-        </div>
+        <div class="quiz-instructions"><strong>Seleziona le caratteristiche che rispecchiano il tuo gioco.</strong></div>
         <div id="quiz-form"></div>
-        <button class="btn-action" onclick="calculateResult()">Genera Livello Stimato</button>
+        <button class="btn-action" onclick="calculateResult()">Vedi Riepilogo</button>
     </div>
 
     <div id="step-result" class="hidden" style="text-align:center">
         <h1>Livello Autovalutato</h1>
         <div id="final-lv" style="font-size: 5rem; font-weight: 900; color: var(--secondary); margin: 5px 0;">--</div>
-        <h2 id="final-def" style="text-transform: uppercase; font-size: 1.3rem;">--</h2>
+        <h2 id="final-def" style="text-transform: uppercase;">--</h2>
         
-        <div style="background: #f9f9f9; padding: 20px; border-radius: 15px; margin: 20px 0; text-align: left; font-size: 0.95rem;">
-            <strong>Atleta:</strong> <span id="conf-nome"></span><br><br>
-            <strong>Descrizione Tecnica:</strong><br>
-            <span id="final-desc"></span><br><br>
-            <small><em>*Risultato soggetto a verifica e possibile modifica dello staff.</em></small>
+        <div class="summary-box">
+            <strong>Atleta:</strong> <span id="conf-nome"></span><br>
+            <strong>Email:</strong> <span id="conf-email"></span><br><br>
+            <strong>Descrizione tecnica:</strong><br><span id="final-desc"></span><br><br>
+            <strong>Risposte fornite:</strong>
+            <ul id="review-answers" class="review-list"></ul>
         </div>
         
-        <button class="btn-action" onclick="sendEmail()">Invia alla Segreteria</button>
-        <p onclick="location.reload()" style="cursor:pointer; color: var(--gray); font-size: 0.85rem; margin-top: 20px; font-weight: bold;">Ricomincia il test</p>
+        <div id="status-container">
+            <button id="final-send-btn" class="btn-action" onclick="sendFinalEmails()">Invia alla Segreteria</button>
+            <button class="btn-action btn-secondary" onclick="goBackToQuiz()">Modifica Risposte</button>
+        </div>
+        
+        <div id="success-message" class="hidden">
+            ✓ Test inviato con successo!<br>Controlla la tua email per la ricevuta.
+            <p onclick="location.reload()" style="cursor:pointer; color: var(--gray); font-size: 0.8rem; margin-top: 15px; text-decoration: underline;">Ricomincia test</p>
+        </div>
     </div>
 </div>
 
 <script>
-    function togglePrivacy() {
-        const ck = document.getElementById('privacy-check');
-        ck.checked = !ck.checked;
-        document.getElementById('start-btn').disabled = !ck.checked;
-    }
+    const SERVICE_ID = "service_nr5v7zv";
+    const TEMPLATE_ID = "template_8n3cn6j"; 
+    const PUBLIC_KEY = "vbu0W3PKBVKsMvPW-";
+
+    emailjs.init(PUBLIC_KEY);
+
+    let generatedCode = "";
+    let userEmail = "";
+    let userName = "";
+    let finalResult = {};
 
     const levelsData = [
         { 
             cat: "Principiante", lvBase: "1.0", lvAdv: "1.5", 
             desc: "Sto imparando a non colpire i vetri. I miei scambi sono brevi o inesistenti.",
             missing: ["Rimbalzo sui vetri", "Servizio con rotazione", "Bandeja e pallonetto", "Vibora e Chiquita", "Smash di potenza (X3/X4)", "Controparete"],
-            questions: [
-                "Cerco di evitare che la palla tocchi il vetro di fondo",
-                "Colpisco spesso i vetri direttamente senza rimbalzo",
-                "I miei scambi durano solitamente massimo 1 o 2 colpi",
-                "Gioco quasi esclusivamente colpi piatti",
-                "Il mio servizio è un semplice appoggio"
-            ]
+            questions: ["Cerco di evitare che la palla tocchi il vetro", "Colpisco i vetri direttamente senza rimbalzo", "I miei scambi durano massimo 1 o 2 colpi", "Gioco quasi solo colpi piatti", "Servizio come semplice appoggio"]
         },
         { 
             cat: "Base (Principiante Avanzato)", lvBase: "2.0", lvAdv: "2.5", 
             desc: "Tengo la palla in campo a ritmi bassi. Capisco il rimbalzo ma fatico ancora a coordinarmi.",
-            missing: ["Servizio con rotazione", "Bandeja e pallonetto", "Vibora e Chiquita", "Smash di potenza (X3/X4)", "Controparete"],
-            questions: [
-                "Tengo la palla in campo se il ritmo è lento",
-                "Inizio ad aspettare che la palla tocchi la parete",
-                "Capisco il rimbalzo ma fatico a coordinare l'uscita",
-                "Eseguo volée di posizionamento",
-                "Uso le pareti laterali per rimettere palla"
-            ]
+            missing: ["Servizio con rotazione", "Bandeja e pallonetto", "Vibora e Chiquita", "Smash potenza", "Controparete"],
+            questions: ["Tengo palla in campo a ritmo lento", "Inizio ad aspettare il tocco a parete", "Eseguo volée di posizionamento", "Uso le pareti laterali per rimettere"]
         },
         { 
             cat: "Intermedio", lvBase: "3.0", lvAdv: "3.5", 
-            desc: "Gioco con strategia. Uso la Bandeja per non perdere la rete, anche se il mio pallonetto è spesso corto.",
-            missing: ["Vibora e Chiquita", "Smash di potenza (X3/X4)", "Controparete"],
-            questions: [
-                "Uso la Bandeja per mantenere la rete",
-                "Faccio pallonetti tattici, anche se spesso corti",
-                "Ho una strategia di base con il partner",
-                "Colpisco con continuità volée e smash base",
-                "Cerco la Bandeja intenzionalmente"
-            ]
+            desc: "Gioco con strategia. Uso la Bandeja per non perdere la rete.",
+            missing: ["Vibora e Chiquita", "Smash potenza", "Controparete"],
+            questions: ["Uso la Bandeja per mantenere la rete", "Faccio pallonetti tattici", "Ho strategia di base col partner", "Colpisco con continuità volée e smash"]
         },
         { 
             cat: "Avanzato", lvBase: "4.0", lvAdv: "4.5", 
-            desc: "So variare gli effetti e uso bene pareti laterali e griglia. Padroneggio Vibora e Chiquita.",
-            missing: ["Smash X3 e X4", "Chiusura sistematica", "Difesa totale in controparete"],
-            questions: [
-                "Uso con regolarità Vibora e Chiquita",
-                "So variare gli effetti (slice/top)",
-                "Uso con consapevolezza pareti e griglia",
-                "Faccio smash efficaci",
-                "Partecipo a tornei FITP/TPRA di 4° Categoria"
-            ]
+            desc: "So variare gli effetti e uso bene pareti e griglia. Padroneggio Vibora e Chiquita.",
+            missing: ["Smash X3 e X4", "Difesa totale controparete"],
+            questions: ["Uso regolarmente Vibora e Chiquita", "So variare gli effetti (slice/top)", "Uso con consapevolezza pareti e griglia", "Partecipo a tornei FITP/TPRA 4° Cat"]
         },
         { 
             cat: "Agonista", lvBase: "5.0", lvAdv: "5.5", 
-            desc: "Gioco con grande intensità. Chiudo regolarmente con smash X3 e X4 e gestisco la controparete.",
+            desc: "Gioco con grande intensità. Chiudo regolarmente con smash X3 e X4.",
             missing: ["Errori gratuiti sotto pressione"],
-            questions: [
-                "Chiudo regolarmente con smash X3 e X4",
-                "Gestisco le difese in controparete",
-                "Mantengo l'intensità tipica dell'agonismo",
-                "Leggo il gioco in anticipo per contrattaccare",
-                "Partecipo a tornei FITP di 3° Categoria"
-            ]
+            questions: ["Chiudo regolarmente con smash X3 e X4", "Gestisco le difese in controparete", "Intensità tipica dell'agonismo", "Partecipo a tornei FITP 3° Cat"]
         }
     ];
 
+    function sendVerificationCode() {
+        userName = document.getElementById('nome').value.trim();
+        userEmail = document.getElementById('email').value.trim();
+        if(!userEmail.includes('@') || !userName) return alert("Inserisci Nome ed Email!");
+
+        generatedCode = Math.floor(1000 + Math.random() * 9000).toString();
+        const btn = document.getElementById('send-code-btn');
+        btn.disabled = true; btn.innerText = "Invio...";
+
+        emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+            subject_line: "Padel Village - Il tuo codice di verifica",
+            to_email: userEmail,
+            atleta: userName,
+            auth_code: generatedCode,
+            livello: "-", categoria: "-"
+        }).then(() => {
+            document.getElementById('step-reg').classList.add('hidden');
+            document.getElementById('step-verify').classList.remove('hidden');
+            document.getElementById('display-email').innerText = userEmail;
+        }).catch(() => { alert("Errore invio"); btn.disabled = false; btn.innerText = "Ricevi Codice"; });
+    }
+
+    function checkCode() {
+        if(document.getElementById('input-code').value.trim() === generatedCode) showQuiz();
+        else document.getElementById('err-verify').innerText = "Codice errato!";
+    }
+
     function showQuiz() {
-        if(!document.getElementById('nome').value || !document.getElementById('email').value) return alert("Inserisci i dati!");
-        document.getElementById('step-reg').classList.add('hidden');
+        document.getElementById('step-verify').classList.add('hidden');
         document.getElementById('step-quiz').classList.remove('hidden');
         const container = document.getElementById('quiz-form');
-        container.innerHTML = ""; // Pulisce il form prima di generarlo
+        if(container.innerHTML !== "") return;
         
-        levelsData.forEach((section, index) => {
+        levelsData.forEach((section, idx) => {
             container.innerHTML += `
                 <div class="level-section">
-                    <div class="level-header">
-                        <span>${section.cat}</span>
-                        <span>LIVELLO ${section.lvBase} - ${section.lvAdv}</span>
-                    </div>
+                    <div class="level-header"><span>${section.cat}</span><span>LV ${section.lvBase}-${section.lvAdv}</span></div>
                     <div class="level-content">
                         <div class="not-mastered-box">
                             <strong>Colpi ancora non padroneggiati:</strong>
-                            <ul class="not-mastered-list">
-                                ${section.missing.map(m => `<li>${m}</li>`).join('')}
-                            </ul>
+                            <ul class="not-mastered-list">${section.missing.map(m => `<li>${m}</li>`).join('')}</ul>
                         </div>
                         <div class="description-text">${section.desc}</div>
-                        <div class="instruction-text">Seleziona una o più caselle che rispecchiano il tuo gioco</div>
                         <div class="options-grid">
-                            ${section.questions.map((q, qIdx) => `
-                                <label class="option-item">
-                                    <input type="checkbox" class="q-check" data-level-idx="${index}">
-                                    <span>${q}</span>
-                                </label>
-                            `).join('')}
+                            ${section.questions.map(q => `<label class="option-item"><input type="checkbox" class="q-check" value="${q}" data-level-idx="${idx}"><span>${q}</span></label>`).join('')}
                         </div>
                     </div>
                 </div>`;
         });
-        window.scrollTo(0,0);
     }
 
-    let finalResult = {};
-
     function calculateResult() {
-        let maxCategoryIdx = -1;
-        let countInMaxCategory = 0;
+        let maxIdx = -1; let count = 0;
+        let selected = [];
+        document.querySelectorAll('.q-check:checked').forEach(c => {
+            selected.push(c.value);
+            let idx = parseInt(c.dataset.levelIdx);
+            if (idx > maxIdx) { maxIdx = idx; count = 1; } else if (idx === maxIdx) { count++; }
+        });
 
-        for (let i = levelsData.length - 1; i >= 0; i--) {
-            const checks = document.querySelectorAll(`.q-check[data-level-idx="${i}"]:checked`);
-            if (checks.length > 0) {
-                maxCategoryIdx = i;
-                countInMaxCategory = checks.length;
-                break;
-            }
-        }
+        if (maxIdx === -1) return alert("Seleziona almeno una voce!");
 
-        if (maxCategoryIdx === -1) return alert("Seleziona almeno una voce!");
-        const section = levelsData[maxCategoryIdx];
-        const finalLv = (countInMaxCategory >= 4) ? section.lvAdv : section.lvBase;
+        const s = levelsData[maxIdx];
+        finalResult = { lv: (count >= 4 ? s.lvAdv : s.lvBase), cat: s.cat, desc: s.desc };
 
-        finalResult = { lv: finalLv, cat: section.cat, desc: section.desc };
-
-        document.getElementById('step-quiz').classList.add('hidden');
-        document.getElementById('step-result').classList.remove('hidden');
-        
         document.getElementById('final-lv').innerText = finalResult.lv;
         document.getElementById('final-def').innerText = finalResult.cat;
         document.getElementById('final-desc').innerText = finalResult.desc;
-        document.getElementById('conf-nome').innerText = document.getElementById('nome').value;
+        document.getElementById('conf-nome').innerText = userName;
+        document.getElementById('conf-email').innerText = userEmail;
+        document.getElementById('review-answers').innerHTML = selected.map(a => `<li>${a}</li>`).join('');
+
+        document.getElementById('step-quiz').classList.add('hidden');
+        document.getElementById('step-result').classList.remove('hidden');
         window.scrollTo(0,0);
     }
 
-    function sendEmail() {
-        const body = `PADEL VILLAGE ASD - AUTOVALUTAZIONE%0D%0A%0D%0AGiocatore: ${document.getElementById('nome').value}%0D%0ALivello Autovalutato: ${finalResult.lv} (${finalResult.cat})%0D%0ADescrizione: ${finalResult.desc}`;
-        window.location.href = `mailto:padelvillage.club@gmail.com?subject=Autovalutazione: ${document.getElementById('nome').value}&body=${body}`;
+    function goBackToQuiz() {
+        document.getElementById('step-result').classList.add('hidden');
+        document.getElementById('step-quiz').classList.remove('hidden');
+    }
+
+    function sendFinalEmails() {
+        const btn = document.getElementById('final-send-btn');
+        btn.disabled = true; btn.innerText = "Invio...";
+
+        const params = {
+            subject_line: `Risultato Test Padel: ${userName} - Livello ${finalResult.lv}`,
+            atleta: userName,
+            email_atleta: userEmail,
+            livello: finalResult.lv,
+            categoria: finalResult.cat,
+            auth_code: "COMPLETATO"
+        };
+
+        emailjs.send(SERVICE_ID, TEMPLATE_ID, { ...params, to_email: "padelvillage.club@gmail.com" })
+        .then(() => {
+            return emailjs.send(SERVICE_ID, TEMPLATE_ID, { ...params, to_email: userEmail });
+        })
+        .then(() => {
+            document.getElementById('status-container').classList.add('hidden');
+            document.getElementById('success-message').classList.remove('hidden');
+            window.scrollTo(0, document.body.scrollHeight);
+        })
+        .catch(() => { alert("Errore invio"); btn.disabled = false; btn.innerText = "Invia Risultati"; });
     }
 </script>
 </body>
